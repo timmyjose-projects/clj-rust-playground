@@ -1,0 +1,7 @@
+{:webserver
+ {:port #profile {:default 8000
+                  :dev 8001
+                  :test 8002}}
+
+ :rust-playground-url "https://play.rust-lang.org/execute"
+ }
