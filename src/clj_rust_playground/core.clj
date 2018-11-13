@@ -1,18 +1,39 @@
 (ns clj-rust-playground.core
   (:require [ring.adapter.jetty :as jetty]
-            [ring.util.response :as res])
+            [ring.util.response :as res]
+            [ring.middleware.params :refer (wrap-params)]
+            [ring.middleware.resource :refer (wrap-resource)]
+            [ring.middleware.content-type :refer (wrap-content-type)]
+            [bidi.ring :refer (make-handler)]
+            [clj-rust-playground.config :as config]
+            [clj-rust-playground.handlers.execute :as execute])
   (:gen-class))
 
 
-(defn handler
+(defn default-handler
   [req]
-  (res/response "OK"))
+  (res/response ""))
+
+
+(def handler
+  (make-handler ["/" {"execute" {:get execute/get-handler
+                                 :post execute/post-handler}
+                      "favicon.ico" default-handler}]))
+
+(def app
+  (-> handler
+      (wrap-resource "html-templates")
+      (wrap-params)))
+
 
 (defn- start-server
-  []
-  (jetty/run-jetty handler {:port 9999}))
+  [port]
+  (jetty/run-jetty app {:port port}))
+
 
 (defn -main
   [& args]
-  (start-server))
+  (config/load-config :default)
+  (let [port (config/get-port)]
+    (start-server port)))
 

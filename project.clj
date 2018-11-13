@@ -9,6 +9,7 @@
                  [ring/ring-jetty-adapter "1.7.1"]
                  [bidi "2.1.4"]
                  [clj-http "3.9.1"]
-                 [aero "1.1.3"]]
+                 [aero "1.1.3"]
+                 [selmer "1.12.3"]]
   :main ^:skip-aot clj-rust-playground.core
   :profiles {:uberjar {:aot :all}})
