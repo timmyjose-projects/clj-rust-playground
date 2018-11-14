@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/data.json "0.2.6"]
                  [ring/ring-core "1.7.1"]
+                 [ring/ring-json "0.4.0"]
                  [ring/ring-jetty-adapter "1.7.1"]
                  [bidi "2.1.4"]
                  [clj-http "3.9.1"]

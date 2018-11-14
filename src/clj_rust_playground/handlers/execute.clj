@@ -1,5 +1,8 @@
 (ns clj-rust-playground.handlers.execute
-  (:require [ring.util.response :as res]))
+  (:require [ring.util.response :as res]
+            [clojure.data.json :as json]
+            [clj-http.client :as client]
+            [clj-rust-playground.config :as config]))
 
 
 (defn get-handler
@@ -8,7 +11,19 @@
       (res/content-type "text/html")))
 
 
-(defn post-handler
-  [req]
-  (res/response "OK!"))
+(def payload-str
+  {:channel "stable"
+   :mode "debug"
+   :crateType "bin"
+   :tests false
+   :code ""
+   :backtrace false})
 
+
+(defn post-handler
+  [{:keys [form-params] :as req}]
+  (let [result (client/post (config/get-plaground-url)
+                         {:body (json/write-str (assoc payload-str :code (get form-params "code")))
+                          :content-type :json
+                          :accept :json})]
+    (res/response (:body result))))

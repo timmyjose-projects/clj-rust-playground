@@ -3,7 +3,7 @@
             [ring.util.response :as res]
             [ring.middleware.params :refer (wrap-params)]
             [ring.middleware.resource :refer (wrap-resource)]
-            [ring.middleware.content-type :refer (wrap-content-type)]
+            [ring.middleware.json :refer (wrap-json-body wrap-json-response)]
             [bidi.ring :refer (make-handler)]
             [clj-rust-playground.config :as config]
             [clj-rust-playground.handlers.execute :as execute])
@@ -16,14 +16,17 @@
 
 
 (def handler
-  (make-handler ["/" {"execute" {:get execute/get-handler
-                                 :post execute/post-handler}
-                      "favicon.ico" default-handler}]))
+  (-> (make-handler ["/" {"" (fn [req] (res/redirect "/execute"))
+                          "execute" {:get execute/get-handler
+                                     :post execute/post-handler}
+                          "favicon.ico" default-handler}])))
 
 (def app
   (-> handler
       (wrap-resource "html-templates")
-      (wrap-params)))
+      wrap-params
+      wrap-json-response
+      (wrap-json-body {:keywords false})))
 
 
 (defn- start-server
