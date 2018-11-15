@@ -1,10 +1,45 @@
 <html>
   <head>
     <title>Execute Rust Code!</title>
+    <link rel="stylesheet" type="text/css" href="styles/execute.css">
   </head>
-  <form action="/execute" method="POST">
-    <textarea name="code" rows="25" cols="50">
-    </textarea>
-    <input type="submit" value="submit"/>
+  <form action="/execute" method="post">
+    <div class="container">
+      <div class="compilation">
+	<fieldset>
+	  <legend>Compilation options</legend>
+	  Channel: 
+	  <select name="channel">
+	    <option value="stable">Stable</option>
+	    <option value="beta">Beta</option>
+	    <option value="nightly">Nightly</option>
+	  </select>
+	  <br><br>
+	  Mode: 
+	  <label for="debug">Debug</label>
+	  <input type="radio" name="mode" id="debug" value="debug" checked>
+	  <label for="release">Release</label>
+	  <input type="radio" name="mode" id="release" value="release"><br><br>
+	  Operation:
+	  <select name="operation">
+	    <option value="run">Run</option>
+	    <option value="build">Build</option>
+	    <option value="test">Test</option>
+	  </select><br><br>
+	  Edition:
+	  <label for="2015">2015</label>
+	  <input type="radio" name="edition" value="2015" checked>
+	  <label for="2018">2018</label>
+	  <input type="radio" name="edition" value="2018">
+	</fieldset>
+      </div>
+      <div class="execution">
+	<fieldset>
+	  <legend>Playground</legend>
+	  <textarea name="code" id="code"> </textarea><br><br>
+	  <input id="submit-button" type="submit" value="submit"/>
+	</fieldset>
+      </div>
+    </div>
   </form>
 </html>

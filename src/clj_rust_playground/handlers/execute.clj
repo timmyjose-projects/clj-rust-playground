@@ -1,5 +1,6 @@
 (ns clj-rust-playground.handlers.execute
-  (:require [ring.util.response :as res]
+  (:require [clj-rust-playground.handlers.helper :as helper]
+            [ring.util.response :as res]
             [clojure.data.json :as json]
             [clj-http.client :as client]
             [clj-rust-playground.config :as config]))
@@ -11,19 +12,20 @@
       (res/content-type "text/html")))
 
 
-(def payload-str
-  {:channel "stable"
-   :mode "debug"
-   :crateType "bin"
-   :tests false
-   :code ""
-   :backtrace false})
-
-
 (defn post-handler
   [{:keys [form-params] :as req}]
-  (let [result (client/post (config/get-plaground-url)
-                         {:body (json/write-str (assoc payload-str :code (get form-params "code")))
-                          :content-type :json
-                          :accept :json})]
-    (res/response (:body result))))
+  (let [payload (-> {}
+                    (assoc :backtrace true)
+                    (assoc :channel (get form-params "channel"))
+                    (assoc :edition (get form-params "edition"))
+                    (assoc :mode (get form-params "mode"))
+                    (assoc :crateType (if (= "run" (get form-params "operation")) "bin" "lib"))
+                    (assoc :tests (if (= "run" (get form-params "operation")) false true))
+                    (assoc :code (get form-params "code"))
+                    json/write-str)
+        post-payload (assoc {:content-type :json :accept :json} :body payload)]
+    (-> (client/post (config/get-playground-url) post-payload)
+        :body
+        json/read-str
+        helper/construct-response-page
+        res/response)))

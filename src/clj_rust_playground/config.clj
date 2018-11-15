@@ -16,7 +16,7 @@
   (get-in @config-atom [:webserver :port]))
 
 
-(defn get-plaground-url
+(defn get-playground-url
   "Retrieve the Rust Playground URL."
   []
   (:rust-playground-url @config-atom))

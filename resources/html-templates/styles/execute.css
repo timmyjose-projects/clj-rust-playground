@@ -1,0 +1,29 @@
+fieldset {
+    display: inline-block;
+}
+
+.container {
+    position: relative;
+    margin: 25px;
+}
+
+.compilation {
+    margin: 5px 25px;
+}
+
+.execution {
+    margin: 15px 25px;
+}
+
+#submit-button {
+    text-align: center;
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+textarea {
+    height: 600px;
+    width: 800px;
+}
+
+
